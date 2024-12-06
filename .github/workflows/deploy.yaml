@@ -1,0 +1,30 @@
+---
+name: "Run AWS CLI"
+
+on:
+  workflow_dispatch: {}
+
+env:
+  awsTenantId: ""
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume:
+          aws-region: ap-southeast-2
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install AWS.Tools.Installer
+        run: Install-Module -Name AWS.Tools.Installer -Force -AllowClobber -Scope CurrentUser -Repository PSGallery
+        shell: pwsh
+
+      - name: Run PowerShell
+        run: ./Run-AwsCode.ps1
+        shell: pwsh
